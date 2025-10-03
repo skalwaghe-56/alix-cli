@@ -101,10 +101,10 @@ class HistoryManager:
             if len(self.redo) > MAX_HISTORY:
                 self.redo = self.redo[-MAX_HISTORY:]
             self.save()
-            msg = f"Undid add ({performed}/{len(aliases)} removed)"
-            if skipped > 0:
-                msg += f", {skipped} skipped"
-            return msg
+            if performed == len(aliases):
+                return f"Undid add ({performed} alias{'es' if performed != 1 else ''} removed)"
+            else:
+                return f"Undid add ({performed} of {len(aliases)} aliases removed, {skipped} skipped)"
 
         if op_type in ("remove", "remove_group"):
             # inverse: re-add aliases
@@ -124,10 +124,16 @@ class HistoryManager:
             if len(self.redo) > MAX_HISTORY:
                 self.redo = self.redo[-MAX_HISTORY:]
             self.save()
-            msg = f"Undid {op_type} ({performed}/{len(aliases)} restored)"
-            if skipped > 0:
-                msg += f", {skipped} skipped"
-            return msg
+            if performed == len(aliases):
+                if op_type == "remove_group":
+                    return f"Undid remove_group ({performed} alias{'es' if performed != 1 else ''} restored)"
+                else:
+                    return f"Undid {op_type} ({performed} alias{'es' if performed != 1 else ''} restored)"
+            else:
+                if op_type == "remove_group":
+                    return f"Undid remove_group ({performed} of {len(aliases)} aliases restored, {skipped} skipped)"
+                else:
+                    return f"Undid {op_type} ({performed} of {len(aliases)} aliases restored, {skipped} skipped)"
 
         return f"Unknown operation type: {op_type}"
 
@@ -158,10 +164,10 @@ class HistoryManager:
             if len(self.undo) > MAX_HISTORY:
                 self.undo = self.undo[-MAX_HISTORY:]
             self.save()
-            msg = f"Redid add ({performed}/{len(aliases)} added)"
-            if skipped > 0:
-                msg += f", {skipped} skipped"
-            return msg
+            if performed == len(aliases):
+                return f"Redid add ({performed} alias{'es' if performed != 1 else ''} added)"
+            else:
+                return f"Redid add ({performed} of {len(aliases)} aliases added, {skipped} skipped)"
 
         if op_type in ("remove", "remove_group"):
             for a in aliases:
@@ -179,9 +185,15 @@ class HistoryManager:
             if len(self.undo) > MAX_HISTORY:
                 self.undo = self.undo[-MAX_HISTORY:]
             self.save()
-            msg = f"Redid {op_type} ({performed}/{len(aliases)} removed)"
-            if skipped > 0:
-                msg += f", {skipped} skipped"
-            return msg
+            if performed == len(aliases):
+                if op_type == "remove_group":
+                    return f"Redid remove_group ({performed} alias{'es' if performed != 1 else ''} removed)"
+                else:
+                    return f"Redid {op_type} ({performed} alias{'es' if performed != 1 else ''} removed)"
+            else:
+                if op_type == "remove_group":
+                    return f"Redid remove_group ({performed} of {len(aliases)} aliases removed, {skipped} skipped)"
+                else:
+                    return f"Redid {op_type} ({performed} of {len(aliases)} aliases removed, {skipped} skipped)"
 
         return f"Unknown operation type: {op_type}"

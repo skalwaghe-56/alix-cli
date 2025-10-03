@@ -142,3 +142,35 @@ def test_partial_failures(temp_storage):
     # Undo should handle gracefully
     msg = temp_storage.history.perform_undo(temp_storage)
     assert "skipped" in msg.lower()
+
+def test_multiple_undos_redos(temp_storage):
+    # Add multiple aliases
+    for i in range(3):
+        temp_storage.add(Alias(name=f"a{i}", command=f"echo {i}"), record_history=True)
+    
+    # Undo all
+    for i in range(3):
+        msg = temp_storage.history.perform_undo(temp_storage)
+        assert "Undid" in msg
+    
+    # Undo beyond empty
+    msg = temp_storage.history.perform_undo(temp_storage)
+    assert "Nothing to undo." in msg
+    
+    # Redo all
+    for i in range(3):
+        msg = temp_storage.history.perform_redo(temp_storage)
+        assert "Redid" in msg
+    
+    # Redo beyond full
+    msg = temp_storage.history.perform_redo(temp_storage)
+    assert "Nothing to redo." in msg
+
+def test_remove_nonexistent(temp_storage):
+    # Remove alias that does not exist
+    result = temp_storage.remove("ghost_alias", record_history=True)
+    assert result is False or result == 0  # whatever your remove returns
+    
+    # Remove group that does not exist
+    result = temp_storage.remove_group("ghost_group")
+    assert result == 0

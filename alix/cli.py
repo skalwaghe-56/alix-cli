@@ -501,14 +501,22 @@ def track(alias_name, context):
 def undo():
     """Undo the last alias operation."""
     msg = storage.history.perform_undo(storage)
-    console.print(msg)
+
+    if not msg or "Nothing" in msg:
+        console.print("⚠️  Nothing to undo – history is empty.")
+    else:
+        console.print(f"✅ {msg}")
 
 
 @main.command()
 def redo():
     """Redo the last undone alias operation."""
     msg = storage.history.perform_redo(storage)
-    console.print(msg)
+
+    if not msg or "Nothing" in msg:
+        console.print("⚠️  Nothing to redo – already at the latest state.")
+    else:
+        console.print(f"🔁 {msg}")
 
 
 @main.command()
@@ -542,8 +550,6 @@ def list_redo():
 
 
 @main.command()
-@click.option("--days", "-d", default=30, help="Number of days to show history for")
-@click.option("--alias", "-a", help="Show history for specific alias only")
 def history(days, alias):
     """Show usage history and trends"""
     if alias:
