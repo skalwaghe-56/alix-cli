@@ -184,8 +184,6 @@ alix remove gs
 
 #### Undo/Redo Operations
 
-Never worry about mistakes! alix keeps a history of your operations so you can easily undo and redo changes:
-
 ```bash
 # Undo the last operation
 alix undo
@@ -261,14 +259,6 @@ alix list-redo
 
 # 💡 Tip: Use 'alix redo --id 1' for most recent, 'alix redo --id 1' for oldest
 ```
-
-**Features:**
-
-- ✅ **Clean emoji formatting**: Consistent, properly formatted messages with emojis
-- 🔄 **Full operation history**: Track add, remove, and remove_group operations
-- ⚡ **Quick navigation**: Easily move back and forth through history
-- 💾 **Persistent storage**: History survives between sessions
-- 🛡️ **Safe operations**: Automatic backups before every change
 
 #### Usage Tracking Commands
 
@@ -652,25 +642,54 @@ pytest tests/ -v
 
 ```
 alix-cli/
+├── CONTRIBUTING.md
+├── FUZZY_SEARCH.md
+├── LICENSE
+├── Makefile
+├── pyproject.toml
+├── README.md
+├── TESTING.md
 ├── alix/
 │   ├── __init__.py
 │   ├── cli.py              # CLI commands
-│   ├── tui.py              # Terminal UI
-│   ├── models.py           # Data models
-│   ├── storage.py          # Storage backend
+│   ├── clipboard.py        # Clipboard operations
 │   ├── config.py           # Configuration
-│   ├── shell_integrator.py # Shell integration
+│   ├── history_manager.py  # History management
+│   ├── models.py           # Data models
+│   ├── porter.py           # Import/export
+│   ├── render.py           # CLI UI templates
+│   ├── scanner.py          # File/command scanning
 │   ├── shell_detector.py   # Shell detection
-│   └── porter.py           # Import/export
-│   └── render.py           # CLI UI templates
+│   ├── shell_integrator.py # Shell integration
+│   ├── shell_wrapper.py    # Shell command wrapping
+│   ├── storage.py          # Storage backend
+│   ├── template_manager.py # Template management
+│   ├── tui.py              # Terminal UI
+│   ├── usage_tracker.py    # Usage tracking
+│   └── templates/
+│       ├── docker.yaml
+│       ├── git.yaml
+│       └── k8s.yaml
 ├── tests/
+│   ├── __init__.py
+│   ├── conftest.py
 │   ├── test_cli.py
+│   ├── test_cli_templates.py
+│   ├── test_clipboard.py
+│   ├── test_config.py
+│   ├── test_fuzzy_search.py
 │   ├── test_models.py
-│   └── test_storage.py
-├── Makefile
-├── pyproject.toml
-├── CONTRIBUTING.md
-└── README.md
+│   ├── test_porter.py
+│   ├── test_render.py
+│   ├── test_scanner.py
+│   ├── test_shell_detector.py
+│   ├── test_shell_integrator.py
+│   ├── test_shell_wrapper.py
+│   ├── test_storage.py
+│   ├── test_template_manager.py
+│   ├── test_tui.py
+│   ├── test_undo_redo.py
+│   └── test_usage_tracking.py
 ```
 
 ## 🤝 Contributing
